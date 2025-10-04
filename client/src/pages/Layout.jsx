@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState} from 'react'
 import Sidebar from '../components/Sidebar.jsx'
 import { Outlet } from 'react-router-dom'
-import { X } from 'lucide-react'
+import { X, Menu } from 'lucide-react'
 import { dummyUserData } from '../assets/assets.js'
 import Loading from '../components/Loading.jsx'
 
@@ -12,7 +12,9 @@ const Layout = () => {
 
   return user ? (
     <div className='w-full flex h-screen'>
-        <Sidebar/>
+
+        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
+
         <div className='flex-1 bg-slate-50'>
             <Outlet/>
         </div>
