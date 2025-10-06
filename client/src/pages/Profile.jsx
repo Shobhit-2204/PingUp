@@ -5,6 +5,7 @@ import Loading from '../components/Loading.jsx'
 import UserProfileInfo from '../components/UserProfileInfo.jsx'
 import PostCard from '../components/PostCard.jsx'
 import moment from 'moment'
+import ProfileModal from '../components/ProfileModal.jsx'
 
 const Profile = () => {
 
@@ -73,7 +74,7 @@ const Profile = () => {
             </div>
         </div>
         {/* Edit Profile Modal*/}
-        {showEdit && <p>show profile edit</p>}
+        {showEdit && <ProfileModal setShowEdit={setShowEdit}/>}
     </div>
   ) : (
     <Loading/>
