@@ -2,6 +2,7 @@ import fs from 'fs'
 import imagekit from '../configs/imageKit.js';
 import Story from '../models/Story.js';
 import User from '../models/User.js';
+import { inngest } from '../inngest/index.js'
 
 // Add User Story
 export const addUserStory = async (req, res) => {
@@ -50,12 +51,32 @@ export const addUserStory = async (req, res) => {
 
         // Upload media to ImageKit
         if (media && (media_type === 'image' || media_type === 'video')) {
-            // ✅ CHANGED: Use the buffer directly from the request file object
+            // Create a readable stream from the file on disk
+            const stream = fs.createReadStream(media.path);
+            
+            // Upload to ImageKit using the stream
             const response = await imagekit.upload({
-                file: media.buffer, // Use media.buffer instead of reading a file
+                file: stream,
                 fileName: media.originalname,
+                folder: "stories"
             });
-            media_url = response.url;
+            
+            // Get the URL from the response (handle different response shapes)
+            media_url = response.url || response.data?.url || null;
+            
+            if (!media_url && response.filePath) {
+                try {
+                    media_url = imagekit.helper.buildSrc({
+                        path: response.filePath,
+                        transformation: [
+                            { quality: 'auto' },
+                            { format: 'auto' }
+                        ]
+                    });
+                } catch (e) {
+                    console.log('buildSrc failed:', e.message);
+                }
+            }
         }
 
         // Create Story

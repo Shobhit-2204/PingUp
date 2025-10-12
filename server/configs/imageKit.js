@@ -31,11 +31,25 @@ const helper = {
   }
 };
 
+// Expose a url builder that mirrors older usage `imagekit.url({...})`
+const url = (options = {}) => {
+  if (typeof ik.url === 'function') return ik.url(options);
+  if (ik.helper && typeof ik.helper.buildUrl === 'function') return ik.helper.buildUrl(options);
+  // Some SDKs expose helper.buildSrc only
+  if (ik.helper && typeof ik.helper.buildSrc === 'function') return ik.helper.buildSrc(options);
+  // fallback to same behaviour as helper.buildSrc
+  if (ik.options && ik.options.urlEndpoint && options.path) {
+    return `${ik.options.urlEndpoint.replace(/\/$/, '')}/${options.path.replace(/^\//, '')}`;
+  }
+  throw new Error('No URL builder available on ImageKit instance.');
+};
+
 // Export a normalized object that controllers can rely on
 const imagekit = {
   instance: ik,
   upload,
   helper,
+  url,
 };
 
 export default imagekit;
