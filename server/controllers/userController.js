@@ -174,7 +174,7 @@ export const discoverUsers = async (req, res) => {
 export const followUser = async (req, res) => {
     try {
         const { userId } = req.auth();
-        const { input } = req.body;
+        const { id } = req.body;
 
         const user = await User.findById(userId)
 
@@ -189,8 +189,19 @@ export const followUser = async (req, res) => {
         toUser.followers.push(userId)
         await toUser.save()
 
-        res.json({success:  true, message: 'Now you are following this user'})
+        // Fetch updated connections data
+        const updatedUser = await User.findById(userId).populate('connections followers following')
+        const connections = updatedUser.connections || []
+        const followers = updatedUser.followers || []
+        const following = updatedUser.following || []
 
+        res.json({
+            success: true, 
+            message: 'Now you are following this user',
+            connections,
+            followers,
+            following
+        })
         
     } catch (error) { 
         console.log(error);
@@ -202,18 +213,29 @@ export const followUser = async (req, res) => {
 export const unfollowUser = async (req, res) => {
     try {
         const { userId } = req.auth();
-        const { input } = req.body;
+        const { id } = req.body;
 
         const user = await User.findById(userId)
-        user.following = user.following.filter(user => user !== id);
+        user.following = user.following.filter(followId => followId.toString() !== id);
         await user.save()
 
         const toUser = await User.findById(id)
-        toUser.followers = toUser.followers.filter(user => user !== userId);
+        toUser.followers = toUser.followers.filter(followerId => followerId.toString() !== userId);
         await toUser.save()
 
-        res.json({success:  true, message: 'You are no longer following this user'})
+        // Fetch updated connections data
+        const updatedUser = await User.findById(userId).populate('connections followers following')
+        const connections = updatedUser.connections || []
+        const followers = updatedUser.followers || []
+        const following = updatedUser.following || []
 
+        res.json({
+            success: true, 
+            message: 'You are no longer following this user',
+            connections,
+            followers,
+            following
+        })
         
     } catch (error) { 
         console.log(error);
@@ -239,7 +261,7 @@ export const sendConnectionRequest = async(req, res) => {
         const connection = await Connection.findOne({
             $or: [
                 {from_user_id: userId, to_user_id: id},
-                {rom_user_id: id, to_user_id: userId},
+                {from_user_id: id, to_user_id: userId},
             ]
         })
 
@@ -272,16 +294,19 @@ export const sendConnectionRequest = async(req, res) => {
 export const getUserConnections = async (req, res) => {
     try {
         const {userId} = req.auth()
-        const {user} = await User.findById(userId).populate('connections followers following')
+        const user = await User.findById(userId).populate('connections followers following')
+        
+        if (!user) {
+            return res.json({success: false, message: "User not found"})
+        }
 
-        const connections = user.connections
-        const followers = user.followers
-        const following = user.following
+        const connections = user.connections || []
+        const followers = user.followers || []
+        const following = user.following || []
 
         const pendingConnections = (await Connection.find({to_user_id: userId, status: 'pending'}).populate('from_user_id')).map(connection=>connection.from_user_id)
 
         res.json({success: true, connections, followers, following, pendingConnections})
-
         
     } catch (error) {
         console.log(error);
@@ -316,7 +341,7 @@ export const acceptConnectionRequest = async (req, res) => {
         
     } catch (error) {
         console.log(error);
-        res.json({success: true, message: error.message});
+        res.json({success: false, message: error.message});
     }
 }
 

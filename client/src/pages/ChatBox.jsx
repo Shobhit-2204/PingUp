@@ -1,18 +1,101 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { dummyMessagesData, dummyUserData } from '../assets/assets.js'
 import { ImageIcon, SendHorizonal } from 'lucide-react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
+import { useAuth } from '@clerk/clerk-react'
+import api from '../api/axios.js'
+import { addMessage, fetchMessages, resetMessages } from '../features/messages/messagesSlice.js'
+import toast from 'react-hot-toast'
+
 
 const ChatBox = () => {
 
-  const messages = dummyMessagesData
+  const {messages} = useSelector((state)=>state.messages)
+  const { userId } = useParams()
+  const { getToken } = useAuth()
+  const dispatch = useDispatch()
+
   const [text, setText] = useState('')
   const [image, setImage] = useState(null)
-  const [user, setUser] = useState(dummyUserData)
+  const [user, setUser] = useState(null)
   const messagesEndRef = useRef(null)
 
-  const sendMessage = async () => {
+  const connections = useSelector((state)=> state.connections)
 
+  const fetchUserMessages = async () => {
+    try {
+      const token = await getToken()
+      dispatch(fetchMessages({token, userId}))
+      
+    } catch (error) {
+      toast.error(error.message)
+    }
   }
+
+  const sendMessage = async () => {
+    try {
+      if(!text && !image) return 
+
+      const token = await getToken()
+      const formData = new FormData();
+      formData.append('to_user_id', userId);
+      formData.append('text', text);
+      image && formData.append('image', image);
+
+      const {data} = await api.post('/api/message/send', formData, {
+        headers: {Authorization: `Bearer ${token}`}
+      })
+      if(data.success){
+        setText('')
+        setImage(null)
+        dispatch(addMessage(data.message))
+      }
+      else{
+        throw new Error(data.message)
+      }
+      
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+
+  useEffect(() => {
+    fetchUserMessages()
+
+    return ()=>{
+      dispatch(resetMessages())
+    }
+  },[userId])
+
+  const fetchUserProfile = async () => {
+    try {
+      const token = await getToken()
+      const { data } = await api.post('/api/user/profiles', { profileId: userId }, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      if(data.success) {
+        setUser(data.profile)
+      }
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
+
+  useEffect(()=>{
+    // Check in both connections and following arrays
+    if(connections.connections.length > 0 || connections.following.length > 0){
+      const user = [...connections.connections, ...connections.following].find(connection => connection._id === userId)
+      if(user) {
+        setUser(user)
+      } else {
+        // If user not found in connections, fetch their profile
+        fetchUserProfile()
+      }
+    } else {
+      // If no connections loaded yet, fetch user profile
+      fetchUserProfile()
+    }
+  }, [connections.connections, connections.following, userId])
 
   useEffect(()=>{
     messagesEndRef.current?.scrollIntoView({behavior: "smooth"})

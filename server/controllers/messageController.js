@@ -122,12 +122,18 @@ export const getChatMessages = async (req, res) => {
 export const getUserRecentMessages = async (req, res) => {
   try {
     const { userId } = req.auth();
-    const messages = await Message.find({ to_user_id: userId })
+    const messages = await Message.find({
+      $or: [
+        { to_user_id: userId },
+        { from_user_id: userId }
+      ]
+    })
       .populate("from_user_id to_user_id")
       .sort({ createdAt: -1 });
 
     res.json({ success: true, messages });
   } catch (error) {
+    console.error("Error in getUserRecentMessages:", error);
     res.json({ success: false, message: error.message });
   }
 };
