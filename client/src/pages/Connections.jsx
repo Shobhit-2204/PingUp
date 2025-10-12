@@ -73,8 +73,8 @@ const Connections = () => {
 
             {/*Counts */}
             <div className='mb-8 flex flex-wrap gap-6'>
-                 {dataArray.map((item, index) => (
-                    <div className='flex flex-col items-center justify-center gap-1 border h-20 w-40 border-gray-200 bg-white shadow rounded-md'>
+                 {dataArray.map((item) => (
+                    <div key={item.label} className='flex flex-col items-center justify-center gap-1 border h-20 w-40 border-gray-200 bg-white shadow rounded-md'>
                         <b>{item.value.length}</b>
                         <p className='text-slate-600'>{item.label}</p>
                     </div>

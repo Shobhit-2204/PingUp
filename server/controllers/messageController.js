@@ -8,8 +8,7 @@ const connections = {};
 // --- SSE Controller ---
 export const sseController = (req, res) => {
   const { userId } = req.params;
-  console.log("New client connected:", userId);
-
+  
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
   res.setHeader("Connection", "keep-alive");
@@ -24,7 +23,6 @@ export const sseController = (req, res) => {
   // Handle disconnect
   req.on("close", () => {
     delete connections[userId];
-    console.log("Client disconnected:", userId);
   });
 };
 
@@ -79,7 +77,9 @@ export const sendMessage = async (req, res) => {
       media_url,
     });
 
-    const messageWithUserData = await Message.findById(message._id).populate("from_user_id");
+    const messageWithUserData = await Message.findById(message._id)
+      .populate("from_user_id")
+      .populate("to_user_id");
 
     // Send response to sender
     res.json({ success: true, message: messageWithUserData });
@@ -105,7 +105,9 @@ export const getChatMessages = async (req, res) => {
         { from_user_id: userId, to_user_id },
         { from_user_id: to_user_id, to_user_id: userId },
       ],
-    }).sort({ createdAt: -1 });
+    })
+      .populate("from_user_id to_user_id")
+      .sort({ createdAt: -1 });
 
     await Message.updateMany(
       { from_user_id: to_user_id, to_user_id: userId },

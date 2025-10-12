@@ -26,8 +26,10 @@ const Notification = ({t, message}) => {
         </div>
         <div className='flex border-1 border-gray-200'>
             <button onClick={()=>{
-                navigate(`/messages/${message.from_user_id._id}`);
-                toast.dismiss(t.id)
+                if (message.from_user_id?._id) {
+                    navigate(`/messages/${message.from_user_id._id}`);
+                    toast.dismiss(t.id);
+                }
             }} className='p-4 text-indigo-600 font-semibold'>
                 Reply
             </button>
