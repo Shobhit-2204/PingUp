@@ -125,7 +125,7 @@ const sendNewConnectionRequestReminder = inngest.createFunction(
 const deleteStory = inngest.createFunction(
     {id: 'story-delete'},
     {event: 'app/story.delete'},
-    async ({evetn, step}) => {
+    async ({event, step}) => {
         const { storyId } = event.data;
         const in24Hours = new Date(Date.now() + 24 * 60 * 60 * 1000)
         await step.sleepUntil('wait-for-24-hours', in24Hours)
