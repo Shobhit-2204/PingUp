@@ -51,27 +51,27 @@ const CreatePost = () => {
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-b from-slate-50 to-white'>
+    <div className='min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-slate-100'>
       <div className='max-w-6xl mx-auto p-6'>
         {/* Title */}
         <div className='mb-8'>
-          <h1 className='text-3xl font-bold text-slate-900 mb-2'>Create Post</h1>
-          <p className='text-slate-600'>Share your thoughts with the world</p>
+          <h1 className='text-3xl font-bold text-slate-50 mb-2'>Create Post</h1>
+          <p className='text-slate-400'>Share your thoughts with the world.</p>
         </div>
 
         {/* form  */}
-        <div className='max-w-xl bg-white p-4 sm:p-8 sm:pb-3 rounded-xl shadow-md space-y-4'>
+        <div className='max-w-xl bg-slate-900/90 p-4 sm:p-8 sm:pb-3 rounded-xl shadow-md space-y-4 border border-slate-800'>
           {/* Header  */}
           <div className='flex items-center gap-3'>
-            <img src={user.profile_picture} alt="" className='w-12 h-12 rounded-full shadow' />
+            <img src={user.profile_picture} alt="" className='w-12 h-12 rounded-full shadow border border-slate-700' />
             <div >
-              <h2 className='font-semibold'>{user.full_name}</h2>
-              <p className='text-sm text-gray-500'>@{user.username}</p>
+              <h2 className='font-semibold text-slate-50'>{user.full_name}</h2>
+              <p className='text-sm text-slate-400'>@{user.username}</p>
             </div>
           </div>
 
           {/*Text area */}
-          <textarea className='w-full resize-none max-h-20 mt-4 text-sm outline-none placeholder-gray-400' placeholder="What's happening?" onChange={(e)=>setContent(e.target.value)} value={content}/>
+          <textarea className='w-full resize-none max-h-20 mt-4 text-sm outline-none placeholder-slate-500 bg-transparent text-slate-100' placeholder="What's happening?" onChange={(e)=>setContent(e.target.value)} value={content}/>
 
           {/*Images */}
           {
@@ -79,7 +79,7 @@ const CreatePost = () => {
             <div className='flex flex-wrap gap-2 mt-4'>
               {images.map((image, i)=>(
                 <div key={i} className='relative group'>
-                  <img src={URL.createObjectURL(image)} className='h-20 rounded-md' alt="" />
+                  <img src={URL.createObjectURL(image)} className='h-20 rounded-md border border-slate-700' alt="" />
                   <div onClick={()=> setImages(images.filter((_, index)=> index !== i ))} className='absolute hidden group-hover:flex justify-center items-center top-0 right-0 bottom-0 left-0 bg-black/40 rounded-md cursor-pointer'>
                     <X className='w-6 h-6 text-white'/>
                   </div>
@@ -88,8 +88,8 @@ const CreatePost = () => {
             </div>
           }
           {/*Bottom bar */}
-          <div className='flex items-center justify-between pt-3 border-t border-gray-300'>
-            <label htmlFor="images" className='flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700 transition cursor-pointer'>
+          <div className='flex items-center justify-between pt-3 border-t border-slate-800'>
+            <label htmlFor="images" className='flex items-center gap-2 text-sm text-slate-400 hover:text-slate-100 transition cursor-pointer'>
               <Image className='size-6'/>
             </label>
 

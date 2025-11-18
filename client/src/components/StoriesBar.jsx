@@ -42,12 +42,15 @@ const StoriesBar = () => {
 
         <div className='flex gap-4 pb-5'>
             {/* Add Story Card */}
-            <div onClick={()=> setShowModal(true)} className='rounded-lg shadow-sm min-w-30 max-w-30 max-h-40 aspect-[3/4] cursor-pointer hover:shadow-lg transition-all duration-200 border-2 border-dashed border-indigo-300 bg-gradient-to-b from-indigo-50 to-white'>
+            <div
+              onClick={()=> setShowModal(true)}
+              className='rounded-lg shadow-sm min-w-30 max-w-30 max-h-40 aspect-[3/4] cursor-pointer hover:shadow-lg transition-all duration-200 border-2 border-dashed border-indigo-500/60 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-900'
+            >
                 <div className='h-full flex flex-col items-center justify-center p-4'>
-                    <div className='size-10 bg-indigo-500 rounded-full flex items-center justify-center mb-3'>
+                    <div className='size-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center mb-3 shadow-lg shadow-indigo-900/60'>
                         <Plus className='w-5 h-5 text-white'/>
                     </div>
-                    <p className='text-sm font-medium text-slate-700 text-center'>Create Story</p>
+                    <p className='text-sm font-medium text-slate-100 text-center'>Create Story</p>
                 </div>
 
             </div>

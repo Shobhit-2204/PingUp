@@ -58,14 +58,14 @@ const RecentMessages = () => {
   }, [user])
 
   return (
-    <div className="bg-white max-w-xs mt-4 p-4 min-h-20 rounded-md shadow text-xs text-slate-800">
-      <h3 className="font-semibold text-slate-800 mb-4">Recent Messages</h3>
+    <div className="bg-slate-900/90 max-w-xs mt-4 p-4 min-h-20 rounded-md shadow text-xs text-slate-100 border border-slate-800">
+      <h3 className="font-semibold text-slate-100 mb-4">Recent Messages</h3>
       <div>
         {messages.map((message, index) => (
           <Link
             to={`/messages/${message.partner._id}`}
             key={index}
-            className="flex items-start gap-2 py-2 hover:bg-slate-100"
+            className="flex items-start gap-2 py-2 hover:bg-slate-800 rounded-md"
           >
             <img
               src={message.partner.profile_picture || '/default-avatar.png'}
@@ -74,11 +74,11 @@ const RecentMessages = () => {
             />
             <div className="w-full">
               <div className="flex justify-between">
-                <p className="font-medium">{message.partner.full_name}</p>
+                <p className="font-medium text-slate-100">{message.partner.full_name}</p>
                 <p className="text-[10px] text-slate-400">{moment(message.createdAt).fromNow()}</p>
               </div>
               <div className="flex justify-between">
-                <p className="text-gray-500">
+                <p className="text-slate-400">
                   {message.from_user_id._id === user.id ? '✓ ' : ''} {/* Show checkmark for sent messages */}
                   {message.text ? 
                     (message.text.length > 20 ? message.text.substring(0, 20) + '...' : message.text) 

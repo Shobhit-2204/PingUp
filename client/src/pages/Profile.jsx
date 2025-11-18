@@ -49,12 +49,12 @@ const Profile = () => {
     },[profileId, currentUser])
 
   return user ? (
-    <div className='relative h-full overflow-y-scroll bg-gray-50 p-6'>
+    <div className='relative h-full overflow-y-scroll bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 p-6 text-slate-100'>
         <div className='max-w-3xl mx-auto'>
             {/*Profile Card*/}
-            <div className='bg-white rounded-2xl shadow overflow-hidden'>
+            <div className='bg-slate-900/90 rounded-2xl shadow-xl overflow-hidden border border-slate-800'>
                 {/*Cover Photo*/}
-                <div className='h-40 md:h-56 bg-gradient-to-r from-indigo-200 via-purple-200 to-pink-200'>
+                <div className='h-40 md:h-56 bg-gradient-to-r from-indigo-900 via-purple-900 to-slate-900'>
                     {user.cover_photo && <img src={user.cover_photo} alt="" className='w-full h-full object-cover'/>}
                 </div>
                 {/*User Info*/}
@@ -63,9 +63,15 @@ const Profile = () => {
 
             {/* Tabs */}
             <div className='mt-6'>
-                <div className='bg-white rounded-xl shadow p-1 flex max-w-md mx-auto'>
+                <div className='bg-slate-900/90 border border-slate-800 rounded-xl shadow p-1 flex max-w-md mx-auto'>
                     {["posts", "media", "likes"].map((tab)=>(
-                        <button onClick={()=> setActiveTab(tab)} key={tab} className={`flex-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors cursor-pointer ${activeTab === tab ? "bg-indigo-600 text-white" : "text-gray-600 hover:text-gray-900"}`}>
+                        <button
+                          onClick={()=> setActiveTab(tab)}
+                          key={tab}
+                          className={`flex-1 px-4 py-2 text-sm font-medium rounded-lg transition-colors cursor-pointer ${
+                            activeTab === tab ? "bg-indigo-600 text-white" : "text-slate-400 hover:text-slate-100"
+                          }`}
+                        >
                             {tab.charAt(0).toUpperCase() + tab.slice(1)}
                         </button>
                     ))}
