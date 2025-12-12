@@ -1,5 +1,5 @@
 import React from 'react'
-import { Eye, MessageSquare } from 'lucide-react'
+import { Eye, MessageSquare, Bot } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
@@ -14,7 +14,22 @@ const Messages = () => {
             {/* Title  */}
             <div className='mb-8'>
                 <h1 className='text-3xl font-bold text-slate-50 mb-2 tracking-tight'>Messages</h1>
-                <p className='text-slate-400'>Talk to your friends — messages and conversations in one place.</p>
+                <p className='text-slate-400'>Talk to your friends or chat with Gemini AI — messages and conversations in one place.</p>
+            </div>
+
+            {/* Gemini AI Chat Shortcut */}
+            <div
+              onClick={()=> navigate('/messages/gemini')}
+              className='max-w-xl mb-6 flex gap-5 p-6 bg-gradient-to-r from-blue-900/80 to-cyan-900/80 border border-blue-500/40 rounded-xl shadow-lg cursor-pointer hover:scale-[1.01] hover:border-blue-400 transition-transform'
+            >
+              <div className='rounded-full size-12 flex items-center justify-center bg-slate-950/70 border border-blue-500/50'>
+                <Bot className='w-6 h-6 text-blue-400'/>
+              </div>
+              <div className='flex-1'>
+                <p className='font-semibold text-slate-50'>Gemini AI</p>
+                <p className='text-xs text-blue-200 mb-1 uppercase tracking-[0.2em]'>AI assistant</p>
+                <p className='text-sm text-slate-300'>Brainstorm ideas, get answers, draft messages, or just chat.</p>
+              </div>
             </div>
 
             {/* Connected Users  */}
